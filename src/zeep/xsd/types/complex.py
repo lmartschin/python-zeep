@@ -141,11 +141,12 @@ class ComplexType(AnyType):
                     if result:
                         init_kwargs.update(result)
                 except UnexpectedElementError as exc:
-                    raise XMLParseError(exc.message)
+                    pass
+                    #raise XMLParseError(exc.message)
 
-            # Check if all children are consumed (parsed)
-            if elements:
-                raise XMLParseError("Unexpected element %r" % elements[0].tag)
+                    # Check if all children are consumed (parsed)
+                    #if elements:
+                    #raise XMLParseError("Unexpected element %r" % elements[0].tag)
 
         # Parse attributes
         if attributes:
@@ -220,7 +221,7 @@ class ComplexType(AnyType):
         if isinstance(value, list):
             return [self._create_object(val, name) for val in value]
 
-        if isinstance(value, CompoundValue) or value is SkipValue:
+        if isinstance(value, CompoundValue):
             return value
 
         if isinstance(value, dict):
@@ -232,9 +233,9 @@ class ComplexType(AnyType):
             return self(value)
 
         raise ValueError((
-            "Error while create XML for complexType '%s': "
-            "Expected instance of type %s, received %r instead."
-        ) % (self.qname or name, self._value_class, type(value)))
+                             "Error while create XML for complexType '%s': "
+                             "Expected instance of type %s, received %r instead."
+                         ) % (self.qname or name, self._value_class, type(value)))
 
     def resolve(self):
         """Resolve all sub elements and types"""
